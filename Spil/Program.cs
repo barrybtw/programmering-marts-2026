@@ -1,19 +1,19 @@
 ﻿namespace Spil;
 
-class Program
+public static class Program
 {
-    private const int STARCOUNT = 10;
+    private const int Starcount = 10;
 
     public static void Main()
     {
-        Player player = new Player(0,0,'$');        // Der kan nu indtastet aktuelle parametre for player
+        var player = new Player(0,0,'$');        // Der kan nu indtastet aktuelle parametre for player
         
         Console.CursorVisible = false;
         Console.Clear();
         
         var random = new Random();
         var stars = new List<(int x, int y)>();
-        for (int i = 0; i < STARCOUNT; i++)                                 // Laver 5 stjerner på tilfældige positioner i konsollen
+        for (var i = 0; i < Starcount; i++)         // Laver x antal stjerner på tilfældige positioner i konsollen
         {
             var x = random.Next(0, Console.WindowWidth);
             var y = random.Next(1, Console.WindowHeight);
@@ -36,68 +36,68 @@ class Program
 
     class Player
     {
-        private int xPos { get; set; }
-        private int yPos { get; set; }
-        private char sign { get; }
-        private ConsoleKey leftKey { get; }
-        public ConsoleKey rightKey { get; }
-        public ConsoleKey upKey { get; }
-        public ConsoleKey downKey { get; }
+        private int XPos { get; set; }
+        private int YPos { get; set; }
+        private char Sign { get; }
+        private ConsoleKey LeftKey { get; }
+        private ConsoleKey RightKey { get; }
+        private ConsoleKey UpKey { get; }
+        private ConsoleKey DownKey { get; }
         
         public Player(int xPos = 0, int yPos = 1, char sign = '¥', ConsoleKey leftKey = ConsoleKey.LeftArrow,
             ConsoleKey rightKey = ConsoleKey.RightArrow, ConsoleKey upKey = ConsoleKey.UpArrow, ConsoleKey downKey = ConsoleKey.DownArrow)
         {
-            this.xPos = xPos;
-            this.yPos = Math.Max(1, yPos);
-            this.sign = sign;
-            this.leftKey = leftKey;
-            this.rightKey = rightKey;
-            this.upKey = upKey;
-            this.downKey = downKey;
+            XPos = xPos;
+            YPos = Math.Max(1, yPos);
+            Sign = sign;
+            LeftKey = leftKey;
+            RightKey = rightKey;
+            UpKey = upKey;
+            DownKey = downKey;
         }
         
         public void Draw()
         {
-            Console.SetCursorPosition(xPos, yPos);
-            Console.Write(sign);
+            Console.SetCursorPosition(XPos, YPos);
+            Console.Write(Sign);
         }
 
         private void Erase()
         {
-            Console.SetCursorPosition(xPos, yPos);
+            Console.SetCursorPosition(XPos, YPos);
             Console.Write(' ');
         }
         
         private void MoveHorizontal(int distance)
         {
-            if (xPos + distance < 0 || xPos + distance >= Console.WindowWidth) return; // Holder den indenfor bounds
+            if (XPos + distance < 0 || XPos + distance >= Console.WindowWidth) return; // Holder den indenfor bounds
             Erase();
-            xPos += distance;
+            XPos += distance;
             Draw();
         }
         
         private void MoveVertical(int distance)
         {
-            if (yPos + distance < 1 || yPos + distance >= Console.WindowHeight) return; // Holder den indenfor bounds
+            if (YPos + distance < 1 || YPos + distance >= Console.WindowHeight) return; // Holder den indenfor bounds
             Erase();
-            yPos += distance;
+            YPos += distance;
             Draw();
         }
 
         public List<(int, int)> ReadInput(ConsoleKeyInfo key, List<(int, int)> stars)
         {
-            if (key.Key == leftKey) MoveHorizontal(-1);
-            else if (key.Key == rightKey) MoveHorizontal(1);
-            else if (key.Key == upKey) MoveVertical(-1);
-            else if (key.Key == downKey) MoveVertical(1);
+            if (key.Key == LeftKey) MoveHorizontal(-1);
+            else if (key.Key == RightKey) MoveHorizontal(1);
+            else if (key.Key == UpKey) MoveVertical(-1);
+            else if (key.Key == DownKey) MoveVertical(1);
             
-            for (var i = 0; i < stars.Count; i++)           // Går igennem alle stjernern og tjekker for collision med player
+            for (var i = 0; i < stars.Count; i++)           // Går igennem alle stjernerne og tjekker for collision med player
             {
-                if (xPos != stars[i].Item1 || yPos != stars[i].Item2) continue;
+                if (XPos != stars[i].Item1 || YPos != stars[i].Item2) continue;
 
                 stars.RemoveAt(i);                          // Fjern stjernen fra listen
-                Console.SetCursorPosition(7, 0);    // Position for point display
-                Console.Write($"{STARCOUNT - stars.Count}");// Opdater point display
+                Console.SetCursorPosition(7, 0);            // Position for point display
+                Console.Write($"{Starcount - stars.Count}");// Opdater point display
                 return stars;                               // Returner den opdaterede stjerne liste
             }
 
